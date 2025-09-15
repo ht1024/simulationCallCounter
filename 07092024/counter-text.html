@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <style>
+      #counterContainer {
+        font-family: "Courier New", Courier, monospace;
+        font-size: 48px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: #000; /* Black background */
+        color: #fff; /* White text */
+      }
+      .digit {
+        display: inline-block;
+        width: 30px;
+        height: 60px;
+        line-height: 60px;
+        text-align: center;
+        margin: 0 2px;
+        background: #000; /* Black background */
+        color: #fff; /* White text */
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        transition: transform 0.3s ease-in-out;
+      }
+      @keyframes flash {
+        0% {
+          background-color: #fff;
+          color: #000;
+        }
+        50% {
+          background-color: rgb(121, 121, 121);
+          color: #000;
+        }
+        100% {
+          background-color: #fff;
+          color: #000;
+        }
+      }
+      .flash {
+        animation: flash 1s;
+      }
+    </style>
+    <script>
+      //Settings//
+      var startCount = 7112172;
+      var maxCount = 9000000;
+      //delayFactor controls how long it delays when hesitating between increments.
+      var delayFactor = 26700;
+      //Do you want the numbers increment by 1?
+      var incremental = true;
+
+      var count = startCount;
+      var page = "07112024-Simulated-Call-Counter-TheHotline.html"; // Define the page variable
+
+      function countUp() {
+        if (incremental) {
+          ++count;
+        } else {
+          count = count + Math.floor(Math.random() * 10);
+        }
+        updateCounterDisplay(count);
+
+        if (count > maxCount) {
+          count = startCount + 1;
+        }
+        if (count == startCount) {
+          window.location = page;
+        } else {
+          setTimeout(countUp, 100 + Math.floor(Math.random() * delayFactor));
+        }
+      }
+
+      function updateCounterDisplay(count) {
+        var counterContainer = document.getElementById("counterContainer");
+        var oldCountStr = counterContainer.innerText.replace(/,/g, "");
+        var countStr = numberWithCommas(count);
+        counterContainer.innerHTML = "";
+        for (var i = 0; i < countStr.length; i++) {
+          var digit = document.createElement("div");
+          digit.className = "digit";
+          digit.innerText = countStr[i];
+          if (oldCountStr[i] !== countStr[i]) {
+            digit.classList.add("flash");
+          }
+          counterContainer.appendChild(digit);
+        }
+      }
+
+      function numberWithCommas(x) {
+        return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+      }
+
+      window.onload = function () {
+        countUp();
+      };
+    </script>
+  </head>
+  <body>
+    <div id="counterContainer"></div>
+  </body>
+</html>
